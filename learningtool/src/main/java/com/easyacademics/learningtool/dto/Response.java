@@ -1,6 +1,7 @@
 package com.easyacademics.learningtool.dto;
 
 import com.easyacademics.learningtool.models.Notes;
+import com.easyacademics.learningtool.models.Schedule;
 import com.easyacademics.learningtool.models.User;
 import lombok.Data;
 
@@ -14,4 +15,5 @@ public class Response {
     private List<User> friends;
     private List<User> requests;
     private List<Notes> notes;
+    private List<Schedule> schedules;
 }

@@ -209,4 +209,18 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
+    @PostMapping("/addSchedule")
+    public ResponseEntity<?> addSchedule(@RequestBody ScheduleRequest scheduleRequest ){
+        try{
+            Response response = userService.addSchedule(scheduleRequest);
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 }

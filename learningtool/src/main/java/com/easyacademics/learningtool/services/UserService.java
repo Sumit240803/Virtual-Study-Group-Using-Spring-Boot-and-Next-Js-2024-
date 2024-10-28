@@ -1,17 +1,15 @@
 package com.easyacademics.learningtool.services;
 
-import com.easyacademics.learningtool.dto.LoginDto;
+
 import com.easyacademics.learningtool.dto.RegisterDto;
 import com.easyacademics.learningtool.dto.Response;
+import com.easyacademics.learningtool.dto.ScheduleRequest;
 import com.easyacademics.learningtool.models.Notes;
+import com.easyacademics.learningtool.models.Schedule;
 import com.easyacademics.learningtool.models.User;
 import com.easyacademics.learningtool.repository.NotesRepository;
+import com.easyacademics.learningtool.repository.ScheduleRepository;
 import com.easyacademics.learningtool.repository.UserRepository;
-import com.easyacademics.learningtool.util.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,12 +26,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final NotesRepository notesRepository;
+    private final ScheduleRepository scheduleRepository;
 
 
-    public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository,NotesRepository notesRepository) {
+    public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository,NotesRepository notesRepository,ScheduleRepository scheduleRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.notesRepository = notesRepository;
+        this.scheduleRepository = scheduleRepository;
     }
 
     public void register(RegisterDto registerDto) {
@@ -177,5 +177,56 @@ public class UserService {
         response.setNotes(notes);
         return response;
     }
+    //Schedules Functions
+    public Response addSchedule(ScheduleRequest scheduleRequest){
+        User loggedUser = getLoggedUser();
+        Schedule schedule = new Schedule();
+        schedule.setName(scheduleRequest.getName());
+        schedule.setNote(scheduleRequest.getNote());
+        schedule.setStart(scheduleRequest.getStart());
+        schedule.setEnd(scheduleRequest.getEnd());
+        schedule.setUser(loggedUser);
+        scheduleRepository.save(schedule);
+        Response response = new Response();
+        response.setMessage("Schedule Added By User");
+        return response;
+    }
+
+    public Response mySchedules(){
+        User loggedUser = getLoggedUser();
+        List<Schedule> schedules = scheduleRepository.findByUser(loggedUser);
+        Response response = new Response();
+        response.setMessage("Schedule Added By User");
+        response.setSchedules(schedules);
+        return response;
+    }
+
+    public Response scheduleById(String id){
+        Optional<Schedule> optionalSchedule = scheduleRepository.findById(id);
+        Response response = new Response();
+        if(optionalSchedule.isPresent()){
+        Schedule schedule = optionalSchedule.get();
+        response.setMessage("Schedule Added By User");
+        response.setSchedules(List.of(schedule));
+        }else {
+            response.setMessage("error");
+        }
+        return response;
+    }
+
+    public Response deleteSchedule(String id){
+        Optional<Schedule> schedule = scheduleRepository.findById(id);
+        Response response = new Response();
+        if(schedule.isPresent()){
+            scheduleRepository.deleteById(id);
+            response.setMessage("Schedule Deleted");
+        }else {
+            response.setMessage("Error");
+        }
+        return response;
+    }
+
+    
+
 
 }

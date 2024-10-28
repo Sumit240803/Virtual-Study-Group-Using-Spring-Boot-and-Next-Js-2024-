@@ -21,15 +21,9 @@ public class User {
     private String email;
     private String password;
     private List<String> role;
-
     private List<User> requests = new ArrayList<>();
-
     private List<User> friends = new ArrayList<>();
-
-
     private List<Notes> notes = new ArrayList<>();
 
     private Group group;
-
-    private Schedule schedule;
 }

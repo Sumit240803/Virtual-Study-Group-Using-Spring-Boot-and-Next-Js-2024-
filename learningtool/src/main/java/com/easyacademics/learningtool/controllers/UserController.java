@@ -17,16 +17,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
-
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtUtils jwtUtils;
-    @Autowired
-    public UserController(UserService userService , JwtUtils jwtUtils,AuthenticationManager authenticationManager) {
+    private final UserRepository userRepository;
+
+    public UserController(UserService userService , JwtUtils jwtUtils,AuthenticationManager authenticationManager,UserRepository userRepository) {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
         this.authenticationManager =authenticationManager;
+        this.userRepository = userRepository;
     }
+
+
+    //Register
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> createUser(@RequestBody RegisterDto registerDto){
@@ -37,6 +41,9 @@ public class UserController {
             return ResponseEntity.internalServerError().body("Error Occurred : "+ e.getLocalizedMessage());
         }
     }
+
+
+    // Login
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto){
@@ -50,18 +57,156 @@ public class UserController {
             return ResponseEntity.internalServerError().body("Error Occurred : "+ e.getLocalizedMessage());
         }
     }
+
+
+    // Sending Requests
+
+
     @PostMapping("/sendRequest")
-        public ResponseEntity<?> sendRequest(@RequestBody SendRequest sendRequest){
-            try {
-                String  username =sendRequest.getUsername();
-                Response response = userService.sendRequest(username);
-                return ResponseEntity.ok().body(response);
-            } catch (Exception e) {
-                Response response = new Response();
-                response.setMessage("Some error occurred");
-                response.setError(e.getLocalizedMessage());
-                return ResponseEntity.badRequest().body(response);
-            }
+    public ResponseEntity<?> sendRequest(@RequestBody SendRequest sendRequest) {
+        try {
+            String friend = sendRequest.getUsername();
+            Response response = userService.sendRequest(friend);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            Response response = new Response();
+            response.setMessage("Some error occurred");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
- }
+    //Current User
+
+    @GetMapping("/loggedUser")
+    public ResponseEntity<?> getLoggedUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+                String username = (principal instanceof UserDetails) ? ((UserDetails) principal).getUsername() : principal.toString();
+                User user = userRepository.findByUsername(username);
+                if (user == null) throw new RuntimeException("User not found");
+                Response response = new Response();
+                response.setMessage("");
+                response.setUser(user);
+                response.setError("");
+                return ResponseEntity.ok().body(response);
+            }
+        } catch (Exception e) {
+            Response response = new Response();
+            response.setMessage("");
+            response.setUser(null);
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.ok().body(response);
+        }
+        return ResponseEntity.ok().body("Error");
+    }
+
+    //Accepting Friends
+
+    @PostMapping("/acceptRequest")
+    public ResponseEntity<?> acceptRequest(@RequestBody SendRequest sendRequest){
+        try {
+            Response response = userService.acceptRequest(sendRequest.getUsername());
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+
+    //Getting ALl friends
+
+
+    @GetMapping("/friends")
+    public ResponseEntity<?> friends(){
+        try {
+            Response response = userService.getFriends();
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    // Getting Requests
+
+    @GetMapping("/requests")
+    public ResponseEntity<?> requests(){
+        try {
+            Response response = userService.requests();
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    // Reject Request
+    @PostMapping("/rejectRequest")
+    public ResponseEntity<?> rejectRequests(@RequestBody SendRequest request){
+        try {
+            Response response = userService.rejectRequest(request.getUsername());
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PostMapping("/addNote")
+    public ResponseEntity<?> rejectRequests(@RequestBody NoteRequest noteRequest){
+        try {
+            Response response = userService.addNote(noteRequest.getSubject(),noteRequest.getNotes());
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @DeleteMapping("/deleteNote/{id}")
+    public ResponseEntity<?> deleteNote(@PathVariable String id){
+        try{
+            Response response = userService.deleteNote(id);
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/myNotes")
+    public ResponseEntity<?> myNotes(){
+        try{
+            Response response = userService.myNotes();
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+}

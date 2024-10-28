@@ -12,5 +12,6 @@ public class Notes {
 
     private String subject;
     private String notes;
+    private String userId;
 
 }

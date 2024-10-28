@@ -21,15 +21,15 @@ public class User {
     private String email;
     private String password;
     private List<String> role;
-    @DBRef
+
     private List<User> requests = new ArrayList<>();
-    @DBRef
+
     private List<User> friends = new ArrayList<>();
 
-    @DBRef
-    private Notes notes;
-    @DBRef
+
+    private List<Notes> notes = new ArrayList<>();
+
     private Group group;
-    @DBRef
+
     private Schedule schedule;
 }

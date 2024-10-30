@@ -22,6 +22,5 @@ public class Schedule {
     private Date start;
     private Date end;
 
-    @DBRef
-    private User user;
+    private String userId;
 }

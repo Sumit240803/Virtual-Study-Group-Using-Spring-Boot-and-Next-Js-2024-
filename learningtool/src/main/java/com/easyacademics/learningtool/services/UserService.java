@@ -179,7 +179,9 @@ public class UserService {
         response.setNotes(notes);
         return response;
     }
+
     //Schedules Functions
+
     public Response addSchedule(ScheduleRequest scheduleRequest){
         User loggedUser = getLoggedUser();
         Schedule schedule = new Schedule();
@@ -187,7 +189,7 @@ public class UserService {
         schedule.setNote(scheduleRequest.getNote());
         schedule.setStart(scheduleRequest.getStart());
         schedule.setEnd(scheduleRequest.getEnd());
-        schedule.setUser(loggedUser);
+        schedule.setUserId(loggedUser.getId());
         scheduleRepository.save(schedule);
         Response response = new Response();
         response.setMessage("Schedule Added By User");
@@ -196,7 +198,7 @@ public class UserService {
 
     public Response mySchedules(){
         User loggedUser = getLoggedUser();
-        List<Schedule> schedules = scheduleRepository.findByUser(loggedUser);
+        List<Schedule> schedules = scheduleRepository.findByUserId(loggedUser.getId());
         Response response = new Response();
         response.setMessage("Schedule Added By User");
         response.setSchedules(schedules);

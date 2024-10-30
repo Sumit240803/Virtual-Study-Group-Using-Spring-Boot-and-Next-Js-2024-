@@ -25,4 +25,5 @@ public class User {
     private List<Notes> notes = new ArrayList<>();
 
     private List<String> groups = new ArrayList<>();
+
 }

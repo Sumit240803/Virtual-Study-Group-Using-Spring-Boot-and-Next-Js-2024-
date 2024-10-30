@@ -209,6 +209,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    // Add Schedule - Tested
 
     @PostMapping("/addSchedule")
     public ResponseEntity<?> addSchedule(@RequestBody ScheduleRequest scheduleRequest ){
@@ -223,6 +224,48 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    // Tested
+    @GetMapping("/mySchedules")
+    public ResponseEntity<?> mySchedules(){
+        try{
+            Response response = userService.mySchedules();
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 
+    //Tested
+    @GetMapping("/schedule/{id}")
+    public ResponseEntity<?> schedule(@PathVariable String id){
+        try{
+            Response response = userService.scheduleById(id);
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    //tested
+    @DeleteMapping("/deleteSchedule/{id}")
+    public ResponseEntity<?> deleteSchedule(@PathVariable String id){
+        try{
+            Response response = userService.deleteSchedule(id);
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 
 }

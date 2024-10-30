@@ -5,9 +5,11 @@ import com.easyacademics.learningtool.services.NotesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/public")
 public class PublicController {
     private final NotesService notesService;
     public PublicController(NotesService notesService){

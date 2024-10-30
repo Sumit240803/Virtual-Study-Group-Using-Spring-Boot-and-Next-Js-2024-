@@ -167,7 +167,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
+    // Adding Notes - Tested
     @PostMapping("/addNote")
     public ResponseEntity<?> rejectRequests(@RequestBody NoteRequest noteRequest){
         try {
@@ -195,7 +195,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
+    // Notes of User - Tested
     @GetMapping("/myNotes")
     public ResponseEntity<?> myNotes(){
         try{

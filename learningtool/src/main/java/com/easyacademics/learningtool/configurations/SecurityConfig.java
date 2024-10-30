@@ -20,9 +20,10 @@ import java.util.List;
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfig  {
+public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final UserDetailsServiceImpl userDetailsService;
+
     @Autowired
     public SecurityConfig(JwtRequestFilter jwtRequestFilter, UserDetailsServiceImpl userDetailsService) {
         this.jwtRequestFilter = jwtRequestFilter;
@@ -35,22 +36,24 @@ public class SecurityConfig  {
 */
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-         http
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth->
+                .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/auth/**")
                                 .permitAll()
+                                .requestMatchers("/public/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                        .sessionManagement(session-> session
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-         http.addFilterBefore(jwtRequestFilter , UsernamePasswordAuthenticationFilter.class);
-         return http.build();
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
+
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

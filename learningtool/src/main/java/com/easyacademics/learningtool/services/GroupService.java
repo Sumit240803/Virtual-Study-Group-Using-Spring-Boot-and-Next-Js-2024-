@@ -7,6 +7,7 @@ import com.easyacademics.learningtool.repository.GroupRepository;
 import com.easyacademics.learningtool.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,24 +15,31 @@ import java.util.Optional;
 public class GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public GroupService(GroupRepository groupRepository, UserRepository userRepository) {
+    public GroupService(GroupRepository groupRepository, UserRepository userRepository ,UserService userService) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public void createGroup(GroupDto groupDto) {
+        User loggedUser = userService.getLoggedUser();
         Group group = new Group();
         group.setName(groupDto.getName());
-        group.setMembersId(groupDto.getMembers());
+        group.setMembersId((groupDto.getMembers()) !=null ? groupDto.getMembers() : new ArrayList<>());
+        group.setAdmin(loggedUser.getUsername());
         groupRepository.save(group);
-        for (String userId : groupDto.getMembers()) {
-            Optional<User> user = userRepository.findById(userId);
-            if (user.isPresent()) {
-                User groupMember = user.get();
-                if (!groupMember.getGroups().contains(group.getId())) {
-                    groupMember.getGroups().add(group.getId());
-                    userRepository.save(groupMember);
+        if (groupDto.getMembers() != null) {
+            for (String userId : groupDto.getMembers()) {
+                Optional<User> user = userRepository.findById(userId);
+                if (user.isPresent()) {
+                    User groupMember = user.get();
+                    groupMember.setGroups(List.of(group.getId()));
+                    if (!groupMember.getGroups().contains(group.getId())) {
+                        groupMember.getGroups().add(group.getId());
+                        userRepository.save(groupMember);
+                    }
                 }
             }
         }

@@ -3,10 +3,7 @@ package com.easyacademics.learningtool.controllers;
 import com.easyacademics.learningtool.dto.GroupDto;
 import com.easyacademics.learningtool.services.GroupService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/group")
@@ -15,15 +12,15 @@ public class GroupController {
     public GroupController(GroupService groupService){
         this.groupService = groupService;
     }
-
+    //Tested
     @PostMapping("/addGroup")
-    public ResponseEntity<?> addGroup(GroupDto groupDto){
+    public ResponseEntity<?> addGroup(@RequestBody GroupDto groupDto){
         groupService.createGroup(groupDto);
         return ResponseEntity.ok().body("Group Created");
     }
-
+    //Tested
     @PostMapping("/{groupId}/addUser")
-    public ResponseEntity<?> addUser(@PathVariable String groupId, GroupDto groupDto){
+    public ResponseEntity<?> addUser(@PathVariable String groupId,@RequestBody GroupDto groupDto){
         groupService.addUser(groupId,groupDto.getMembers());
         return ResponseEntity.ok().body("User Added");
     }

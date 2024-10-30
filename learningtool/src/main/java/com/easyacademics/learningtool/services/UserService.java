@@ -4,9 +4,11 @@ package com.easyacademics.learningtool.services;
 import com.easyacademics.learningtool.dto.RegisterDto;
 import com.easyacademics.learningtool.dto.Response;
 import com.easyacademics.learningtool.dto.ScheduleRequest;
+import com.easyacademics.learningtool.models.Group;
 import com.easyacademics.learningtool.models.Notes;
 import com.easyacademics.learningtool.models.Schedule;
 import com.easyacademics.learningtool.models.User;
+import com.easyacademics.learningtool.repository.GroupRepository;
 import com.easyacademics.learningtool.repository.NotesRepository;
 import com.easyacademics.learningtool.repository.ScheduleRepository;
 import com.easyacademics.learningtool.repository.UserRepository;
@@ -27,13 +29,15 @@ public class UserService {
     private final UserRepository userRepository;
     private final NotesRepository notesRepository;
     private final ScheduleRepository scheduleRepository;
+    private final GroupRepository groupRepository;
 
 
-    public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository,NotesRepository notesRepository,ScheduleRepository scheduleRepository) {
+    public UserService(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository, NotesRepository notesRepository, ScheduleRepository scheduleRepository , GroupRepository groupRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.notesRepository = notesRepository;
         this.scheduleRepository = scheduleRepository;
+        this.groupRepository = groupRepository;
     }
 
     public void register(RegisterDto registerDto) {
@@ -230,7 +234,47 @@ public class UserService {
         return response;
     }
 
-    
+    // Group Functions
 
+    public Response myGroups(){
+        User loggedUser = getLoggedUser();
+        Response response = new Response();
+        if(loggedUser.getGroups().isEmpty()){
+            response.setMessage("No current groups");
+            return response;
+        }
+        response.setGroups(loggedUser.getGroups());
+        return response;
+    }
+
+    public Response leaveGroup(String id){
+        Optional<Group> optionalGroup =  groupRepository.findById(id);
+        User loggedUser = getLoggedUser();
+        Response response = new Response();
+        if(optionalGroup.isPresent()){
+            Group group = optionalGroup.get();
+            if(group.getMembersId().contains(loggedUser.getId())){
+                loggedUser.getGroups().remove(id);
+                response.setMessage("Group Left");
+            }
+        }
+        return response;
+    }
+
+    public Response removeUserFromGroup(String groupId , String userId){
+        User loggedUser = getLoggedUser();
+        Optional<Group> group = groupRepository.findById(groupId);
+        Response response = new Response();
+        if(group.isPresent()){
+            Group myGroup = group.get();
+            if(myGroup.getAdmin().contains(loggedUser.getUsername())){
+                myGroup.getMembersId().remove(userId);
+                response.setMessage("Kicked User from Group");
+            }else {
+                response.setMessage("You are not an admin");
+            }
+        }
+        return response;
+    }
 
 }

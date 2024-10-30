@@ -16,4 +16,5 @@ public class Response {
     private List<String> requests;
     private List<Notes> notes;
     private List<Schedule> schedules;
+    private List<String> groups;
 }

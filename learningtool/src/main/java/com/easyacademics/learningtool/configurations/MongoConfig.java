@@ -16,10 +16,14 @@ public class MongoConfig {
     @Bean
     public MongoClient mongoClient(){
         String uri = "mongodb://localhost:27017/";
+      //  String uri = "mongodb://goyalsumit651:ChawlaJiya2101@cluster0-shard-00-02.ts2rw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(uri))
                 .applyToConnectionPoolSettings(builder ->
-                        builder.maxConnectionIdleTime(1000, TimeUnit.MILLISECONDS))
+                        builder.maxConnectionIdleTime(10000, TimeUnit.MILLISECONDS)
+                                )
+
+
                 .build();
         return MongoClients.create(settings);
     }

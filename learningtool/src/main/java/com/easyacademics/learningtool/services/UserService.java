@@ -70,8 +70,8 @@ public class UserService {
     public Response sendRequest(String username) {
         User user = userRepository.findByUsername(username);
         User loggedUser = getLoggedUser();
-        if (!user.getRequests().contains(loggedUser)) {
-            user.getRequests().add(loggedUser);
+        if (!user.getRequests().contains(loggedUser.getUsername())) {
+            user.getRequests().add(loggedUser.getUsername());
             userRepository.save(user);
             Response response = new Response();
             response.setMessage("Request Sent");
@@ -88,10 +88,10 @@ public class UserService {
     public Response acceptRequest(String username) {
         User user = userRepository.findByUsername(username);
         User loggedUser = getLoggedUser();
-        if (loggedUser.getRequests().contains(user)) {
-            loggedUser.getFriends().add(user);
-            loggedUser.getRequests().remove(user);
-            user.getFriends().add(loggedUser);
+        if (loggedUser.getRequests().contains(username)) {
+            loggedUser.getFriends().add(username);
+            loggedUser.getRequests().remove(username);
+            user.getFriends().add(loggedUser.getUsername());
             userRepository.save(user);
             userRepository.save(loggedUser);
             Response response = new Response();
@@ -136,8 +136,9 @@ public class UserService {
         User loggedUser = getLoggedUser();
         Response response = new Response();
         if (!loggedUser.getRequests().isEmpty()) {
-            loggedUser.getRequests().remove(user);
+            loggedUser.getRequests().remove(username);
             userRepository.save(loggedUser);
+            response.setMessage("Rejected");
         } else {
             response.setMessage("No Requests Right Now");
         }

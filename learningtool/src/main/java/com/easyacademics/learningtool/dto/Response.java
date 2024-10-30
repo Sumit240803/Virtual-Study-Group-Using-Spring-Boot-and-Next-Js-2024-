@@ -12,8 +12,8 @@ public class Response {
     private String message;
     private User user;
     private String error;
-    private List<User> friends;
-    private List<User> requests;
+    private List<String> friends;
+    private List<String> requests;
     private List<Notes> notes;
     private List<Schedule> schedules;
 }

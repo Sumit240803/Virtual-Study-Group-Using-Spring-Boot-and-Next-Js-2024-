@@ -3,11 +3,12 @@ package com.easyacademics.learningtool.services;
 import com.easyacademics.learningtool.dto.Response;
 import com.easyacademics.learningtool.models.Notes;
 import com.easyacademics.learningtool.repository.NotesRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 public class NotesService {
     private final NotesRepository notesRepository;
 

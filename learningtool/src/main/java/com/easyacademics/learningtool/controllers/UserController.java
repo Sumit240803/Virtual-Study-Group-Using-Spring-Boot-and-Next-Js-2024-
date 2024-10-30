@@ -30,7 +30,7 @@ public class UserController {
     }
 
 
-    //Register
+    //Register - Tested
 
     @PostMapping("/auth/register")
     public ResponseEntity<?> createUser(@RequestBody RegisterDto registerDto){
@@ -43,7 +43,7 @@ public class UserController {
     }
 
 
-    // Login
+    // Login - Tested
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginDto loginDto){
@@ -59,7 +59,7 @@ public class UserController {
     }
 
 
-    // Sending Requests
+    // Sending Requests - Tested
 
 
     @PostMapping("/sendRequest")
@@ -76,7 +76,7 @@ public class UserController {
         }
     }
 
-    //Current User
+    //Current User - Tested
 
     @GetMapping("/loggedUser")
     public ResponseEntity<?> getLoggedUser() {
@@ -103,7 +103,7 @@ public class UserController {
         return ResponseEntity.ok().body("Error");
     }
 
-    //Accepting Friends
+    //Accepting Friends - Tested
 
     @PostMapping("/acceptRequest")
     public ResponseEntity<?> acceptRequest(@RequestBody SendRequest sendRequest){
@@ -120,7 +120,7 @@ public class UserController {
     }
 
 
-    //Getting ALl friends
+    //Getting ALl friends - Tested
 
 
     @GetMapping("/friends")
@@ -137,7 +137,7 @@ public class UserController {
         }
     }
 
-    // Getting Requests
+    // Getting Requests - Tested
 
     @GetMapping("/requests")
     public ResponseEntity<?> requests(){
@@ -153,7 +153,7 @@ public class UserController {
         }
     }
 
-    // Reject Request
+    // Reject Request  - Tested
     @PostMapping("/rejectRequest")
     public ResponseEntity<?> rejectRequests(@RequestBody SendRequest request){
         try {

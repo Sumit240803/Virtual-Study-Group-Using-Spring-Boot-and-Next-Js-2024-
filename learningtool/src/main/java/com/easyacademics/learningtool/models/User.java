@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -25,5 +24,5 @@ public class User {
     private List<User> friends = new ArrayList<>();
     private List<Notes> notes = new ArrayList<>();
 
-    private Group group;
+    private List<String> groups = new ArrayList<>();
 }

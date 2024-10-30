@@ -164,6 +164,7 @@ public class UserService {
         Optional<Notes> notes = notesRepository.findById(id);
         if(notes.isPresent() && loggedUser.getNotes().contains(notes.get())){
             notesRepository.deleteById(id);
+            notesRepository.save(notes.get());
         }
             Response response = new Response();
             response.setMessage("Note Deleted");

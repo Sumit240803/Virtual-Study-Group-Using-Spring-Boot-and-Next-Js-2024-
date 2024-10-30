@@ -181,7 +181,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-
+    // Deleting notes - Tested
     @DeleteMapping("/deleteNote/{id}")
     public ResponseEntity<?> deleteNote(@PathVariable String id){
         try{

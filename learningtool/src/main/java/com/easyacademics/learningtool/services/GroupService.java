@@ -8,6 +8,7 @@ import com.easyacademics.learningtool.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,17 +26,51 @@ public class GroupService {
 
     public void createGroup(GroupDto groupDto) {
         User loggedUser = userService.getLoggedUser();
+
+        // Create a new group object
         Group group = new Group();
         group.setName(groupDto.getName());
-        group.setMembersId((groupDto.getMembers()) !=null ? groupDto.getMembers() : new ArrayList<>());
+
+        // Set members of the group; if members are null, initialize with an empty list
+        group.setMembersId((groupDto.getMembers() != null) ? groupDto.getMembers() : new ArrayList<>());
+
+        // Add the logged-in user as a member of the new group
+        if (!group.getMembersId().contains(loggedUser.getId())) {
+            group.getMembersId().add(loggedUser.getId());
+        }
+
+        // Set the admin of the group
         group.setAdmin(loggedUser.getUsername());
+
+        // Save the new group to the repository
         groupRepository.save(group);
+
+        // Ensure the logged user’s groups list is initialized
+        if (loggedUser.getGroups() == null) {
+            loggedUser.setGroups(new ArrayList<>());
+        }
+
+        // Add the new group's ID to the user's groups if not already present
+        if (!loggedUser.getGroups().contains(group.getId())) {
+            loggedUser.getGroups().add(group.getId());
+        }
+
+        // Save the updated user object
+        userRepository.save(loggedUser);
+
+        // Adding additional members from groupDto
         if (groupDto.getMembers() != null) {
             for (String userId : groupDto.getMembers()) {
                 Optional<User> user = userRepository.findById(userId);
                 if (user.isPresent()) {
                     User groupMember = user.get();
-                    groupMember.setGroups(List.of(group.getId()));
+
+                    // Initialize groups list if null
+                    if (groupMember.getGroups() == null) {
+                        groupMember.setGroups(new ArrayList<>());
+                    }
+
+                    // Add the new group ID to the group member's groups list if not already present
                     if (!groupMember.getGroups().contains(group.getId())) {
                         groupMember.getGroups().add(group.getId());
                         userRepository.save(groupMember);
@@ -44,6 +79,7 @@ public class GroupService {
             }
         }
     }
+
 
     public void addUser(String groupId, List<String> membersId) {
         Optional<Group> group = groupRepository.findById(groupId);

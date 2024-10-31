@@ -268,4 +268,46 @@ public class UserController {
         }
     }
 
+    @GetMapping("/joinedGroups")
+    public ResponseEntity<?> myGroups(){
+        try{
+            Response response = userService.myGroups();
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PostMapping("/leaveGroup/{id}")
+    public ResponseEntity<?> leaveGroup(@PathVariable String id){
+        try{
+            Response response = userService.leaveGroup(id);
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e) {
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PostMapping("/kick/{groupId}/{userId}")
+    public ResponseEntity<?> kickUser(@PathVariable String groupId , @PathVariable String userId){
+        try{
+            Response response = userService.removeUserFromGroup(groupId, userId);
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e) {
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
 }

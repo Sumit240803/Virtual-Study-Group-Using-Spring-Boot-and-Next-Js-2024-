@@ -246,34 +246,80 @@ public class UserService {
         response.setGroups(loggedUser.getGroups());
         return response;
     }
-
-    public Response leaveGroup(String id){
-        Optional<Group> optionalGroup =  groupRepository.findById(id);
+    public Response leaveGroup(String id) {
+        Optional<Group> optionalGroup = groupRepository.findById(id);
         User loggedUser = getLoggedUser();
         Response response = new Response();
-        if(optionalGroup.isPresent()){
+
+        if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
-            if(group.getMembersId().contains(loggedUser.getId())){
+
+            // Check if the logged user is a member of the group
+            if (group.getMembersId().contains(loggedUser.getId())) {
+                // Remove the logged user from the group
+                group.getMembersId().remove(loggedUser.getId());
                 loggedUser.getGroups().remove(id);
-                response.setMessage("Group Left");
+
+                // Check if the logged user was the admin
+                if (group.getAdmin().equals(loggedUser.getUsername())) {
+                    group.setAdmin("");
+                }
+
+                // Save the updated user and group
+                userRepository.save(loggedUser);
+                groupRepository.save(group);
+
+                // Check if there are no members left in the group
+                if (group.getMembersId().isEmpty()) {
+                    groupRepository.delete(group); // Delete the group if no members remain
+                    response.setMessage("Group deleted as the last member left.");
+                } else {
+                    response.setMessage("Group left.");
+                }
+            } else {
+                response.setMessage("You are not a member of this group.");
             }
+        } else {
+            response.setMessage("Group not found.");
         }
         return response;
     }
-
-    public Response removeUserFromGroup(String groupId , String userId){
+    public Response removeUserFromGroup(String groupId, String userId) {
         User loggedUser = getLoggedUser();
-        Optional<Group> group = groupRepository.findById(groupId);
+        Optional<Group> groupOptional = groupRepository.findById(groupId);
+        Optional<User> userOptional = userRepository.findById(userId);
         Response response = new Response();
-        if(group.isPresent()){
-            Group myGroup = group.get();
-            if(myGroup.getAdmin().contains(loggedUser.getUsername())){
-                myGroup.getMembersId().remove(userId);
-                response.setMessage("Kicked User from Group");
-            }else {
-                response.setMessage("You are not an admin");
+
+        if (groupOptional.isPresent()) {
+            Group myGroup = groupOptional.get();
+
+            // Check if the logged user is the admin of the group
+            if (myGroup.getAdmin().equals(loggedUser.getUsername())) {
+                // Check if the user to be removed is actually a member of the group
+                if (myGroup.getMembersId().contains(userId)) {
+                    // Remove the user from the group
+                    myGroup.getMembersId().remove(userId);
+
+                    // Update the user's groups
+                    if (userOptional.isPresent()) {
+                        User myUser = userOptional.get();
+                        myUser.getGroups().remove(groupId);
+                        userRepository.save(myUser);
+                    }
+
+                    // Save the updated group
+                    groupRepository.save(myGroup);
+                    response.setMessage("Kicked user from group.");
+                } else {
+                    response.setMessage("User is not a member of the group.");
+                }
+            } else {
+                response.setMessage("You are not an admin.");
             }
+        } else {
+            response.setMessage("Group not found.");
         }
+
         return response;
     }
 

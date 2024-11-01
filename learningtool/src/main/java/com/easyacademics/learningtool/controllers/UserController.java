@@ -35,7 +35,7 @@ public class UserController {
     @PostMapping("/auth/register")
     public ResponseEntity<?> createUser(@RequestBody RegisterDto registerDto){
         try{
-        userService.register(registerDto);
+            userService.register(registerDto);
         return ResponseEntity.ok().body("User Created");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error Occurred : "+ e.getLocalizedMessage());
@@ -50,7 +50,9 @@ public class UserController {
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(),loginDto.getPassword()));
             String token = jwtUtils.generateToken(loginDto.getUsername());
+            User user = userRepository.findByUsername(loginDto.getUsername());
             Response Response = new Response();
+            Response.setUser(user);
             Response.setMessage(token);
             return ResponseEntity.ok().body(Response);
         } catch (Exception e) {

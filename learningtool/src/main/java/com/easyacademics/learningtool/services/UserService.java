@@ -53,7 +53,6 @@ public class UserService {
             newUser.setEmail(registerDto.getEmail());
             newUser.setRole(List.of("ROLE_USER"));
             userRepository.save(newUser);
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

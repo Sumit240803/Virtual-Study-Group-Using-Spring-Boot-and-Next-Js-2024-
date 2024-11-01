@@ -15,12 +15,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
     private final JwtRequestFilter jwtRequestFilter;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -62,6 +64,14 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
         return authenticationManagerBuilder.build();
+    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry){
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:3000/")
+                .allowedMethods("POST","GET","PUT","DELETE")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 
 }

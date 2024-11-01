@@ -1,5 +1,6 @@
 package com.easyacademics.learningtool.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class User {
     private String name;
     private String username;
     private String email;
+    @JsonIgnore
     private String password;
     private List<String> role;
     private List<String> requests = new ArrayList<>();

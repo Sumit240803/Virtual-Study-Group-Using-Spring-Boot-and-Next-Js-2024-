@@ -203,7 +203,7 @@ public class UserService {
         User loggedUser = getLoggedUser();
         List<Schedule> schedules = scheduleRepository.findByUserId(loggedUser.getId());
         Response response = new Response();
-        response.setMessage("Schedule Added By User");
+        response.setMessage("Schedule By User");
         response.setSchedules(schedules);
         return response;
     }

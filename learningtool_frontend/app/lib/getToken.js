@@ -1,4 +1,7 @@
 export const getToken  = ()=>{
-    const token = localStorage.getItem("token");
-    return token ? token : null;
+    if(typeof window !== "undefined"){
+        const token = localStorage.getItem("token");
+        return token ? token : null;
+    }
+    return null;
 }

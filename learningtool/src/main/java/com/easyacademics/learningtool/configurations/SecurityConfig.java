@@ -48,6 +48,16 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers("/public/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .cors(cors->
+                        cors
+                                .configurationSource(request -> {
+                                    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                                    corsConfig.setAllowedOrigins(List.of("http://localhost:3000"));
+                                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                                    corsConfig.setAllowedHeaders(List.of("*"));
+                                    corsConfig.setAllowCredentials(true);
+                                    return corsConfig;
+                                }))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -65,13 +75,6 @@ public class SecurityConfig implements WebMvcConfigurer {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
         return authenticationManagerBuilder.build();
     }
-    @Override
-    public void addCorsMappings(CorsRegistry registry){
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000/")
-                .allowedMethods("POST","GET","PUT","DELETE")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
+
 
 }

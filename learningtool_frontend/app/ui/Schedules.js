@@ -48,9 +48,7 @@ const Schedules = () => {
                     schedules.map((schedule) => (
                         <div key={schedule.id} className="my-4 p-4 bg-gray-700 rounded shadow">
                             <Link href={`/pages/user/profile/schedules/${schedule.id}`} className="text-2xl font-semibold text-blue-400">{schedule.name}</Link>
-                            <p className="text-lg text-white">{schedule.note}</p>
-                            <p className="text-md text-gray-400">Start: {new Date(schedule.start).toLocaleString()}</p>
-                            <p className="text-md text-gray-400">End: {new Date(schedule.end).toLocaleString()}</p>
+                            
                         </div>
                     ))
                 ) : (

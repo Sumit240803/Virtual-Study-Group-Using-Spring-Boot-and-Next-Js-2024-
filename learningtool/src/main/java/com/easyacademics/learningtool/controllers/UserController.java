@@ -311,5 +311,24 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    @GetMapping("/searchByUsername")
+    public ResponseEntity<?> search(String username){
+        try{
+            User user = userRepository.findByUsername(username);
+            Response response = new Response();
+            if(user != null){
+                response.setUser(user);
+            }
+            response.setMessage("Not found");
+            response.setUser(null);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 
 }

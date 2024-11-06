@@ -2,6 +2,7 @@
 import { getToken } from '@/app/lib/getToken'
 import { getUser } from '@/app/lib/getUserDetails';
 import { isExpired } from '@/app/lib/verifyToken';
+import Groups from '@/app/ui/Groups';
 import Header from '@/app/ui/Header';
 import Notes from '@/app/ui/Notes';
 import Requests from '@/app/ui/Requests';
@@ -46,7 +47,7 @@ const page = () => {
             </div>
             <div className='flex justify-around py-16'>
             <div className='border-2 text-center bg-gray-800 rounded-lg w-1/3 shadow-lg shadow-blue-300 border-black min-h-44 px-10 py-2'><Requests/></div>
-            <div className='border-2 text-center bg-gray-800 rounded-lg w-1/3 shadow-lg shadow-blue-300 border-black min-h-44 px-10 py-2'>Groups</div>
+            <div className='border-2 text-center bg-gray-800 rounded-lg w-1/3 shadow-lg shadow-blue-300 border-black min-h-44 px-10 py-2'><Groups/></div>
             </div>
         </div>
     </div>

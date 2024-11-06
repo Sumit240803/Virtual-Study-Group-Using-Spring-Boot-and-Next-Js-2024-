@@ -312,15 +312,16 @@ public class UserController {
         }
     }
     @GetMapping("/searchByUsername")
-    public ResponseEntity<?> search(String username){
+    public ResponseEntity<?> search(@RequestParam("query") String query){
         try{
-            User user = userRepository.findByUsername(username);
+            User user = userRepository.findByUsername(query);
             Response response = new Response();
             if(user != null){
-                response.setUser(user);
-            }
+                response.setMessage(user.getUsername());
+            }else{
             response.setMessage("Not found");
             response.setUser(null);
+            }
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             Response response = new Response();

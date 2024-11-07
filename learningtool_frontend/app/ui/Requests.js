@@ -24,7 +24,7 @@ const Requests = () => {
   }
   useEffect(()=>{
     friends();
-  })
+  },[])
   return (
     <div className='' >
       <div className='flex flex-row justify-center items-center'>

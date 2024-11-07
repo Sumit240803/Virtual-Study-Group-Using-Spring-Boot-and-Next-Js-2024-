@@ -318,6 +318,7 @@ public class UserController {
             Response response = new Response();
             if(user != null){
                 response.setMessage(user.getUsername());
+                response.setUserId(user.getId());
             }else{
             response.setMessage("Not found");
             response.setUser(null);

@@ -14,5 +14,5 @@ public class Messages {
     private String sender;
     private String content;
     private LocalDateTime time;
-    private Group group;
+    private String groupId;
 }

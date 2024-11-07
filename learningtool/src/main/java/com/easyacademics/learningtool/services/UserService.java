@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -321,6 +322,23 @@ public class UserService {
 
         return response;
     }
+
+    public Response getMyGroups(){
+        User user = getLoggedUser();
+        List<String> groupId = user.getGroups();
+        Response response = new Response();
+        response.setGroup(new ArrayList<>());
+        for(String group : groupId){
+            Optional<Group> group1 = groupRepository.findById(group);
+            if(group1.isPresent()){
+                Group myGroup = group1.get();
+                response.getGroup().add(myGroup);
+            }
+        }
+        return response;
+    }
+
+
 
 
 }

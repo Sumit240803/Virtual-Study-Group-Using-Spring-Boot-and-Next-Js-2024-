@@ -27,7 +27,7 @@ public class ChatController {
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if(optionalGroup.isPresent()){
             Group group = optionalGroup.get();
-            messages.setGroup(group);
+            messages.setGroupId(groupId);
         }
         messages.setTime(LocalDateTime.now());
         return messageRepository.save(messages);

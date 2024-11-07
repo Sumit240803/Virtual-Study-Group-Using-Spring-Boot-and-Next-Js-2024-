@@ -24,8 +24,9 @@ public class User {
     private List<String> role;
     private List<String> requests = new ArrayList<>();
     private List<String > friends = new ArrayList<>();
+    @JsonIgnore
     private List<Notes> notes = new ArrayList<>();
-
+    @JsonIgnore
     private List<String> groups = new ArrayList<>();
 
 }

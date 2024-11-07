@@ -1,5 +1,6 @@
 package com.easyacademics.learningtool.dto;
 
+import com.easyacademics.learningtool.models.Group;
 import com.easyacademics.learningtool.models.Notes;
 import com.easyacademics.learningtool.models.Schedule;
 import com.easyacademics.learningtool.models.User;
@@ -18,4 +19,5 @@ public class Response {
     private List<Schedule> schedules;
     private List<String> groups;
     private String userId;
+    private List<Group> group;
 }

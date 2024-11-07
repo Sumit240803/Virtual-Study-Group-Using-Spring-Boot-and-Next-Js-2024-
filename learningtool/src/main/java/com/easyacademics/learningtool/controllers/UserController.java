@@ -273,7 +273,7 @@ public class UserController {
     @GetMapping("/joinedGroups")
     public ResponseEntity<?> myGroups(){
         try{
-            Response response = userService.myGroups();
+            Response response = userService.getMyGroups();
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             Response response = new Response();

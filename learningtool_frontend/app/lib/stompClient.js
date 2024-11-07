@@ -16,6 +16,9 @@ const useStompClient = (groupId, onMessage) => {
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
+      debug: (str) => {
+        console.log(new Date(), str);  // Debugging logs for WebSocket connection
+    }
     });
 
     stompClient.onConnect = () => {

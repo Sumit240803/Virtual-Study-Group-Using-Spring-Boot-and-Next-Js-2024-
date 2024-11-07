@@ -46,6 +46,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers("/auth/**")
                                 .permitAll()
                                 .requestMatchers("/public/**").permitAll()
+                                .requestMatchers("/ws/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .cors(cors->
@@ -60,6 +61,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 }))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

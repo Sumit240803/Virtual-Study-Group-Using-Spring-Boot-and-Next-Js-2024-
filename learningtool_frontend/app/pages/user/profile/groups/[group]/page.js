@@ -1,12 +1,12 @@
 "use client"
+import { getToken } from '@/app/lib/getToken';
 import ChatComponent from '@/app/ui/Chat';
 import { useParams } from 'next/navigation'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const page = () => {
     const {group} = useParams();
-
-  return group ? <ChatComponent groupId={group}/> : <p>"Loading.."</p>
+  return group ? <ChatComponent groupId={group} />  : <p>"Loading.."</p>
 }
 
 export default page

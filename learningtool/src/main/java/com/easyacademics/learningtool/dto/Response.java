@@ -1,9 +1,6 @@
 package com.easyacademics.learningtool.dto;
 
-import com.easyacademics.learningtool.models.Group;
-import com.easyacademics.learningtool.models.Notes;
-import com.easyacademics.learningtool.models.Schedule;
-import com.easyacademics.learningtool.models.User;
+import com.easyacademics.learningtool.models.*;
 import lombok.Data;
 
 import java.util.List;
@@ -20,4 +17,5 @@ public class Response {
     private List<String> groups;
     private String userId;
     private List<Group> group;
+    private List<Messages> messages;
 }

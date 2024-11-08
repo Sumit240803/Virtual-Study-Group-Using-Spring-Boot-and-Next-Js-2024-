@@ -26,7 +26,7 @@ public class ChatController {
     public Messages sendMessage(@DestinationVariable String groupId , Messages messages){
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if(optionalGroup.isPresent()){
-            Group group = optionalGroup.get();
+            //GroupGroup = optionalGroup.get();
             messages.setGroupId(groupId);
         }
         messages.setTime(LocalDateTime.now());

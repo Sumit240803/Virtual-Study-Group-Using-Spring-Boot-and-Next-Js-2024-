@@ -24,4 +24,5 @@ public class GroupController {
         groupService.addUser(groupId,groupDto.getMembers());
         return ResponseEntity.ok().body("User Added");
     }
+
 }

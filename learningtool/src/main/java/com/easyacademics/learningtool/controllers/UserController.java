@@ -333,4 +333,18 @@ public class UserController {
         }
     }
 
+    @GetMapping("/currentGroup")
+    public ResponseEntity<?> currentGroup(@RequestParam("query")String id){
+        try {
+            Response response = userService.currentGroup(id);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            Response response = new Response();
+            response.setUser(null);
+            response.setMessage("Error");
+            response.setError(e.getLocalizedMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
 }

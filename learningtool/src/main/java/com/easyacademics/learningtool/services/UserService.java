@@ -337,6 +337,13 @@ public class UserService {
         }
         return response;
     }
+    public Response currentGroup(String id){
+        Optional<Group> optionalGroup = groupRepository.findById(id);
+        Response response = new Response();
+        response.setGroup(new ArrayList<>());
+        optionalGroup.ifPresent(group -> response.getGroup().add(group));
+        return response;
+    }
 
 
 

@@ -35,7 +35,11 @@ export default function ChatComponent({ groupId }) {
             });
             if (response.ok) {
                 const data = await response.json();
-                setPreviousMessages(prevMessages => [...data.messages, ...prevMessages]);
+                setPreviousMessages(prevMessages => {
+                    const combinedMessages = [...data.messages, ...prevMessages];
+                    const uniqueMessages = [...new Map(combinedMessages.map(msg => [msg.id, msg])).values()];
+                    return uniqueMessages;
+                });
                 
                 // Restore the previous scroll position after messages load
                 setTimeout(() => {
@@ -62,7 +66,8 @@ export default function ChatComponent({ groupId }) {
         }
     };
 
-    const allMessages = [...previousMessages, ...websocketMessages];
+    // Combine and deduplicate messages
+    const allMessages = [...new Map([...previousMessages, ...websocketMessages].map(msg => [msg.id, msg])).values()];
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -74,93 +79,91 @@ export default function ChatComponent({ groupId }) {
             setPage(prevPage => prevPage + 1);
         }
     };
-    const[myGroup , setMyGroup] = useState([]);
-    const groupInfo = async()=>{
-      try {
-        const token = getToken();
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/currentGroup?query=${groupId}`,
-          {
-            method : "GET",
-            headers : {
-              "Authorization" : `Bearer ${token}`
+    
+    const [myGroup, setMyGroup] = useState([]);
+    const groupInfo = async () => {
+        try {
+            const token = getToken();
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/currentGroup?query=${groupId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setMyGroup(data.group);
             }
-          }
-        )
-        if(response.ok){
-          const data = await response.json();
-          setMyGroup(data.group);
-
+        } catch (error) {
+            console.log(error);
         }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    useEffect(()=>{
-      groupInfo();
-    },[])
+    };
 
-
+    useEffect(() => {
+        groupInfo();
+    }, []);
 
     return (
         <div className='custom-scrollbar'>
             <div>
-            <Header/>
+                <Header />
             </div>
-        <div
-            ref={chatContainerRef}
-            onScroll={handleScroll}
-            className="custom-scrollbar min-h-[50%] max-h-screen mb-10 overflow-y-auto  bg-gray-800 rounded-lg shadow-lg mt-10 border w-[90%] m-auto"
-        >
-            <h2 className="sticky top-0 z-10  bg-black py-5  mt-8 text-2xl font-bold mb-4 text-center text-blue-300">{myGroup ? myGroup.map((group)=>(
-                <div key={group.id}>{group.name}</div>
-            )):"Group"}</h2>
-            <div>
-                {allMessages.length > 0 ? (
-                    allMessages.map((msg, index) => (
-                        <div
-                            key={index}
-                            className={`flex my-1 ${msg.sender === username ? 'justify-end' : 'justify-start'}`}
-                        >
+            <div
+                ref={chatContainerRef}
+                onScroll={handleScroll}
+                className="custom-scrollbar min-h-[50%] max-h-screen mb-10 overflow-y-auto bg-gray-800 rounded-lg shadow-lg mt-10 border w-[90%] m-auto"
+            >
+                <h2 className="sticky top-0 z-10 bg-black py-5 mt-8 text-2xl font-bold mb-4 text-center text-blue-300">
+                    {myGroup.length > 0 ? myGroup.map((group) => (
+                        <div key={group.id}>{group.name}</div>
+                    )) : "Group"}
+                </h2>
+                <div>
+                    {allMessages.length > 0 ? (
+                        allMessages.map((msg, index) => (
                             <div
-                                className={` w-96 mx-10  p-5 rounded-tr-xl rounded-bl-xl shadow-md  ${
-                                    msg.sender === username
-                                        ? 'bg-gray-950 text-blue-200 text-right shadow-green-700'
-                                        : 'bg-sky-900 text-blue-200 shadow-md shadow-blue-700 text-left'
-                                }`}
+                                key={index}
+                                className={`flex my-1 ${msg.sender === username ? 'justify-end' : 'justify-start'}`}
                             >
-                                <p className="font-bold text-left">{msg.sender}</p>
-                                <p className="text-xl font-semibold text-left">{msg.content}</p>
-                                <small className="block text-xs text-gray-500">
-                                    {new Date(msg.time).toLocaleString()}
-                                </small>
+                                <div
+                                    className={`w-96 mx-10 p-5 rounded-tr-xl rounded-bl-xl shadow-md ${
+                                        msg.sender === username
+                                            ? 'bg-gray-950 text-blue-200 text-right shadow-green-700'
+                                            : 'bg-sky-900 text-blue-200 shadow-md shadow-blue-700 text-left'
+                                    }`}
+                                >
+                                    <p className="font-bold text-left">{msg.sender}</p>
+                                    <p className="text-xl font-semibold text-left">{msg.content}</p>
+                                    <small className="block text-xs text-gray-500">
+                                        {new Date(msg.time).toLocaleString()}
+                                    </small>
+                                </div>
                             </div>
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-center text-gray-500">No messages yet</p>
-                )}
-                {loading && <p className="text-center text-blue-500">Loading...</p>}
+                        ))
+                    ) : (
+                        <p className="text-center text-gray-500">No messages yet</p>
+                    )}
+                    {loading && <p className="text-center text-blue-500">Loading...</p>}
+                </div>
+
+                <div ref={messagesEndRef} />
+
+                <div className="sticky bottom-0 z-10 w-1/3 m-auto mt-4 flex mb-3 ">
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type your message"
+                        className="flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+                    />
+                    <button
+                        onClick={handleSendMessage}
+                        className="w-1/4 bg-gray-700 text-white rounded-r-lg px-4 py-2 hover:bg-blue-600 transition"
+                    >
+                        Send
+                    </button>
+                </div>
             </div>
-    
-            <div ref={messagesEndRef} />
-    
-            <div className="sticky bottom-0 z-10 w-1/3 m-auto mt-4 flex mb-3 ">
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type your message"
-                    className="flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
-                />
-                <button
-                    onClick={handleSendMessage}
-                    className="w-1/4 bg-gray-700 text-white rounded-r-lg px-4 py-2 hover:bg-blue-600 transition"
-                >
-                    Send
-                </button>
-            </div>
-        </div>
         </div>
     );
-    
 }

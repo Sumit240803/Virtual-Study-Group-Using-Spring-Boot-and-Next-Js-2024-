@@ -15,8 +15,8 @@ public class MongoConfig {
 
     @Bean
     public MongoClient mongoClient(){
-        String uri = "mongodb://localhost:27017/";
-      // String uri = "mongodb://goyalsumit651:1234@cluster0-shard-00-02.ts2rw.mongodb.net:27017,cluster0-shard-00-01.ts2rw.mongodb.net:27017,cluster0-shard-00-00.ts2rw.mongodb.net:27017/?retryWrites=true&w=majority&appName=Cluster0";
+       // String uri = "mongodb://localhost:27017/";
+       String uri = "mongodb://goyalsumit651:1234@project.ts2rw.mongodb.net/?retryWrites=true&w=majority&appName=project";
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(new ConnectionString(uri))
                 .applyToConnectionPoolSettings(builder ->

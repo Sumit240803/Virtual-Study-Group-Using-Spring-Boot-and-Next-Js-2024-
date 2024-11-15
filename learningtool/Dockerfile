@@ -5,7 +5,7 @@ FROM openjdk:21-jdk-slim as build
 WORKDIR /app
 
 # Step 3: Copy the Spring Boot jar file into the container
-COPY target/your-application.jar app.jar
+COPY target/learningtool-0.0.1-SNAPSHOT.jar app.jar
 
 # Step 4: Expose the port that your app will run on
 EXPOSE 8080

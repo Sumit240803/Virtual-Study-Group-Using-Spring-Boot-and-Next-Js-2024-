@@ -3,7 +3,7 @@ import { getToken } from '@/app/lib/getToken';
 import Header from '@/app/ui/Header'
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const Page = () => {
   const [query, setQuery] = useState('');
   const [username, setUsername] = useState('');
   const[requests , setRequests] = useState([]);
@@ -180,4 +180,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

@@ -18,7 +18,7 @@ const Page = () => {
     e.preventDefault();
     //console.log(formData);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      const response = await fetch(`https://virtual-study-group-using-spring-boot.onrender.com/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

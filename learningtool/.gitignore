@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Include the JAR file in target/ directory
+!target/*.jar
+
 ### STS ###
 .apt_generated
 .classpath

@@ -10,7 +10,7 @@ import Schedules from '@/app/ui/Schedules';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const Profile = () => {
     const [userDetails,setUserDetails] = useState(null);
     const router = useRouter();
 
@@ -54,4 +54,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Profile

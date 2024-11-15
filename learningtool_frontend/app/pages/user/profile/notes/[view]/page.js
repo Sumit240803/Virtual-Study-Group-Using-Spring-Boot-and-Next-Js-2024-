@@ -4,7 +4,7 @@ import Header from '@/app/ui/Header'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const View = () => {
   const [note, setNote] = useState([]);
   const router = useRouter();
   const { view } =useParams();
@@ -46,4 +46,4 @@ const page = () => {
   )
 }
 
-export default page
+export default View

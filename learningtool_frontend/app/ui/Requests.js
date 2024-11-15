@@ -37,7 +37,7 @@ const Requests = () => {
             <div key={friend}>
               <div className='text-blue-400'> {friend} </div>
             </div>
-          )) : <div className='text-blue-400 font-semibold text-xl'>You currently don't have friends.</div>}</div>
+          )) : <div className='text-blue-400 font-semibold text-xl'>You currently don @apos t have friends.</div>}</div>
        
       </div>
      

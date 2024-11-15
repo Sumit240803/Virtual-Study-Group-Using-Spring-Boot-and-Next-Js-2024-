@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.easyacademics.learningtool.LearningtoolApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.179 s -- in com.easyacademics.learningtool.LearningtoolApplicationTests

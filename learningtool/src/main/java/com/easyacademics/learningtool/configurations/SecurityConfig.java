@@ -49,17 +49,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .requestMatchers("/ws/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .cors(cors->
-                        cors
-                                .configurationSource(request -> {
-                                    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-
-                                    corsConfig.setAllowedOrigins(List.of("https://virtual-study-group-using-spring-boot-and-next-js-2024.vercel.app"));
-                                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","OPTIONS"));
-                                    corsConfig.setAllowedHeaders(List.of("*"));
-                                    corsConfig.setAllowCredentials(true);
-                                    return corsConfig;
-                                }))
+                .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -78,14 +68,24 @@ public class SecurityConfig implements WebMvcConfigurer {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
         return authenticationManagerBuilder.build();
     }
-    @Override
+  /*  @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("https://virtual-study-group-using-spring-boot-and-next-js-2024.vercel.app") // Your frontend URL
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("Authorization", "Content-Type", "Accept")
                 .allowCredentials(true);
-    }
+    }*//*cors->
+            cors
+                    .configurationSource(request -> {
+        var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+
+        corsConfig.setAllowedOrigins(List.of("https://virtual-study-group-using-spring-boot-and-next-js-2024.vercel.app"));
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","OPTIONS"));
+        corsConfig.setAllowedHeaders(List.of("*"));
+        corsConfig.setAllowCredentials(true);
+        return corsConfig;
+    })*/
 
 
 

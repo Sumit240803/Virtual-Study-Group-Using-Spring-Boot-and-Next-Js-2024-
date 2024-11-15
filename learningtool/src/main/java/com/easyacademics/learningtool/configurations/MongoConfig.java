@@ -1,4 +1,4 @@
-/*package com.easyacademics.learningtool.configurations;
+package com.easyacademics.learningtool.configurations;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -32,4 +32,3 @@ public class MongoConfig {
         return new MongoTemplate(mongoClient(),"EasyAcademics");
     }
     }
-*/

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 
 const Page = () => {
     const {group} = useParams();
-  return group ? <ChatComponent groupId={group} />  : <p>"Loading.."</p>
+  return group ? <ChatComponent groupId={group} />  : <p>Loading..</p>
 }
 
 export default Page

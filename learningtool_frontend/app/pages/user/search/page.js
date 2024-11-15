@@ -171,7 +171,7 @@ const Page = () => {
             <div key={friend}>
               <div> {friend} </div>
             </div>
-          )) : <div>You currently don't have friends.</div>}</div>
+          )) : <div>You currently don&apost have friends.</div>}</div>
         </div>
       </div>
       </div>
